@@ -1,0 +1,250 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OrderTrack | Vendor Workspace</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Arial,sans-serif;background:#f7f8fc;color:#172033}
+button,input,select{font:inherit}
+.app{display:flex;min-height:100vh}
+.sidebar{width:235px;background:#fff;border-right:1px solid #e8eaf0;padding:25px 16px;flex-shrink:0}
+.logo{font-size:23px;font-weight:800;color:#2563eb;margin:5px 12px 35px}
+.logo span{color:#172033}
+.nav-label{font-size:11px;color:#939bad;margin:25px 12px 10px;font-weight:700}
+.nav button{display:block;width:100%;text-align:left;border:0;background:none;padding:12px;border-radius:8px;color:#667085;cursor:pointer;margin:3px 0}
+.nav button.active,.nav button:hover{background:#eff5ff;color:#2563eb;font-weight:700}
+.main{flex:1;min-width:0}
+.topbar{height:72px;background:#fff;border-bottom:1px solid #e8eaf0;display:flex;align-items:center;justify-content:space-between;padding:0 30px}
+.profile{font-size:13px;color:#667085}
+.content{padding:30px;max-width:1400px;margin:auto}
+h1{font-size:25px;margin:0 0 7px}
+.sub{color:#8490a3;font-size:13px;margin-bottom:25px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.card{background:#fff;border:1px solid #e8eaf0;border-radius:12px;padding:20px}
+.stat-label{font-size:13px;color:#788397}
+.stat-value{font-size:27px;font-weight:750;margin:12px 0 5px}
+.green{color:#15966a;font-size:12px}
+.section{margin-top:25px}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+.section-head h2{font-size:17px}
+.primary{background:#2563eb;color:white;border:0;padding:11px 16px;border-radius:8px;cursor:pointer}
+.primary:hover{background:#1d4ed8}
+.secondary{background:white;color:#344054;border:1px solid #dce1e9;padding:10px 14px;border-radius:8px;cursor:pointer}
+.table-wrap{overflow-x:auto;background:white;border:1px solid #e8eaf0;border-radius:12px}
+table{width:100%;border-collapse:collapse;min-width:650px}
+th,td{text-align:left;padding:15px;border-bottom:1px solid #eef0f4;font-size:13px}
+th{color:#8490a3;font-weight:600;background:#fafbfc}
+.status{padding:5px 9px;border-radius:20px;font-size:11px;background:#eff5ff;color:#2563eb}
+.status.Delivered{background:#e7f8f0;color:#12835d}
+.status.Pending{background:#fff5df;color:#a66a00}
+.status.Processing{background:#eff5ff;color:#2563eb}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px}
+.toolbar input,.toolbar select,.field input,.field select{padding:11px;border:1px solid #dce1e9;border-radius:8px;background:white}
+.toolbar input{flex:1;min-width:180px}
+.page{display:none}.page.active{display:block}
+.empty{padding:35px;text-align:center;color:#8490a3}
+.modal{display:none;position:fixed;inset:0;background:#10182880;align-items:center;justify-content:center;padding:15px;z-index:5}
+.modal.open{display:flex}
+.modal-box{background:white;padding:25px;border-radius:14px;width:100%;max-width:460px;max-height:90vh;overflow:auto}
+.modal-box h2{margin-top:0}
+.field{margin:14px 0}
+.field label{display:block;font-size:12px;color:#667085;margin-bottom:7px}
+.field input,.field select{width:100%}
+.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
+.customer-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.customer{background:white;border:1px solid #e8eaf0;border-radius:12px;padding:20px}
+.customer strong{display:block;margin-bottom:8px}
+.metric{font-size:23px;font-weight:700;margin-top:12px}
+.notice{padding:14px;background:#eff5ff;border-radius:9px;color:#2456a6;font-size:13px;margin-top:18px}
+@media(max-width:850px){.sidebar{width:185px}.stats{grid-template-columns:repeat(2,1fr)}.customer-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){
+ .app{display:block;padding-bottom:65px}
+ .sidebar{position:fixed;bottom:0;left:0;right:0;width:100%;height:62px;padding:5px;background:white;border-top:1px solid #e8eaf0;z-index:3}
+ .logo,.nav-label{display:none}
+ .nav{display:flex;justify-content:space-around}
+ .nav button{font-size:11px;text-align:center;padding:12px 5px;margin:0}
+ .topbar{height:58px;padding:0 15px}
+ .content{padding:20px 14px}
+ .stats{gap:9px}.card{padding:13px}.stat-value{font-size:22px}
+ .customer-grid{grid-template-columns:1fr}
+ .profile{font-size:11px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+ <div class="logo">Order<span>Track</span></div>
+ <div class="nav-label">WORKSPACE</div>
+ <nav class="nav">
+  <button class="active" onclick="showPage('dashboard',this)">▦ Dashboard</button>
+  <button onclick="showPage('orders',this)">▤ Orders</button>
+  <button onclick="showPage('customers',this)">♙ Customers</button>
+  <button onclick="showPage('reports',this)">▥ Reports</button>
+  <div class="nav-label">TOOLS</div>
+  <button onclick="showPage('tracking',this)">◎ Customer tracking</button>
+  <button onclick="showPage('settings',this)">⚙ Settings</button>
+ </nav>
+</aside>
+
+<main class="main">
+<header class="topbar">
+ <strong>Vendor Workspace</strong>
+ <div class="profile">Priya's Bake Studio &nbsp; ●</div>
+</header>
+<div class="content">
+
+<section id="dashboard" class="page active">
+ <h1>Good morning, Priya 👋</h1>
+ <p class="sub">Here's what's happening with your business today.</p>
+ <div class="stats">
+  <div class="card"><div class="stat-label">Total orders</div><div class="stat-value" id="totalOrders">12</div><div class="green">Your order activity</div></div>
+  <div class="card"><div class="stat-label">Revenue</div><div class="stat-value">₹24,850</div><div class="green">Demo revenue</div></div>
+  <div class="card"><div class="stat-label">Pending orders</div><div class="stat-value" id="pendingOrders">4</div><div class="stat-label">Need attention</div></div>
+  <div class="card"><div class="stat-label">Pending payments</div><div class="stat-value">₹3,400</div><div class="stat-label">Across sample orders</div></div>
+ </div>
+ <div class="section">
+  <div class="section-head"><h2>Recent orders</h2><button class="secondary" onclick="showPage('orders',document.querySelectorAll('.nav button')[1])">View all</button></div>
+  <div class="table-wrap"><table><thead><tr><th>ORDER ID</th><th>CUSTOMER</th><th>DATE</th><th>AMOUNT</th><th>STATUS</th></tr></thead><tbody id="recentRows"></tbody></table></div>
+ </div>
+ <div class="notice">Welcome to OrderTrack! This is your vendor demo workspace with sample business data.</div>
+</section>
+
+<section id="orders" class="page">
+ <h1>Orders</h1><p class="sub">Manage and track all your customer orders.</p>
+ <div class="section-head"><h2>All orders</h2><button class="primary" onclick="openModal()">+ Create order</button></div>
+ <div class="toolbar"><input id="search" placeholder="Search customer or order ID..." oninput="renderOrders()">
+ <select id="filter" onchange="renderOrders()"><option value="">All statuses</option><option>Pending</option><option>Processing</option><option>Delivered</option></select></div>
+ <div class="table-wrap"><table><thead><tr><th>ORDER ID</th><th>CUSTOMER</th><th>DATE</th><th>AMOUNT</th><th>STATUS</th><th>ACTION</th></tr></thead><tbody id="orderRows"></tbody></table></div>
+</section>
+
+<section id="customers" class="page">
+ <h1>Customers</h1><p class="sub">Manage your customer relationships and order history.</p>
+ <div class="section-head"><h2>Customer directory</h2><button class="primary" onclick="addCustomer()">+ Add customer</button></div>
+ <div class="customer-grid" id="customerGrid"></div>
+</section>
+
+<section id="reports" class="page">
+ <h1>Reports & Analytics</h1><p class="sub">Understand your business performance.</p>
+ <div class="stats">
+  <div class="card"><div class="stat-label">Total orders</div><div class="stat-value" id="reportTotal">12</div></div>
+  <div class="card"><div class="stat-label">Average order value</div><div class="stat-value">₹2,070</div></div>
+  <div class="card"><div class="stat-label">Delivered orders</div><div class="stat-value" id="deliveredTotal">5</div></div>
+  <div class="card"><div class="stat-label">Demo revenue</div><div class="stat-value">₹24,850</div></div>
+ </div>
+ <div class="section card"><h2>Order status overview</h2><div id="statusSummary"></div></div>
+ <div class="section"><button class="primary" onclick="exportCSV()">Download orders CSV</button></div>
+</section>
+
+<section id="tracking" class="page">
+ <h1>Customer tracking</h1><p class="sub">Preview how customers can follow their orders.</p>
+ <div class="card" style="max-width:550px">
+  <div class="stat-label">ORDER #OT-1008</div>
+  <h2>Chocolate Celebration Cake</h2>
+  <p>Customer: Aditi Sharma</p>
+  <div class="notice">✓ Order confirmed</div>
+  <div class="notice">✓ In production</div>
+  <div class="notice">✓ Ready for dispatch</div>
+  <div class="notice">○ Delivered</div>
+  <p class="sub">Expected delivery: Tomorrow, 4:00 PM</p>
+ </div>
+</section>
+
+<section id="settings" class="page">
+ <h1>Settings</h1><p class="sub">Manage your business profile.</p>
+ <div class="card" style="max-width:550px">
+  <div class="field"><label>Business name</label><input value="Priya's Bake Studio"></div>
+  <div class="field"><label>Owner name</label><input value="Priya Sharma"></div>
+  <div class="field"><label>Business email</label><input value="priya@example.com"></div>
+  <div class="field"><label>Contact number</label><input value="+91 98765 43210"></div>
+  <button class="primary" onclick="alert('Demo only: settings are not connected to a server.')">Save settings</button>
+ </div>
+ <div class="notice">This prototype stores order changes in this browser only. It is not yet connected to a shared database.</div>
+</section>
+
+</div></main></div>
+
+<div class="modal" id="orderModal">
+ <div class="modal-box">
+  <h2>Create new order</h2>
+  <div class="field"><label>Customer name</label><input id="newCustomer" placeholder="Enter customer name"></div>
+  <div class="field"><label>Product / order details</label><input id="newProduct" placeholder="e.g. Birthday cake"></div>
+  <div class="field"><label>Order amount (₹)</label><input id="newAmount" type="number" min="1" placeholder="Enter amount"></div>
+  <div class="field"><label>Delivery date</label><input id="newDate" type="date"></div>
+  <div class="modal-actions"><button class="secondary" onclick="closeModal()">Cancel</button><button class="primary" onclick="createOrder()">Create order</button></div>
+ </div>
+</div>
+
+<script>
+const initialOrders=[
+ {id:"OT-1012",customer:"Aditi Sharma",date:"2026-11-18",product:"Chocolate cake",amount:1200,status:"Delivered"},
+ {id:"OT-1011",customer:"Rahul Verma",date:"2026-11-18",product:"Custom cupcakes",amount:850,status:"Processing"},
+ {id:"OT-1010",customer:"Neha Gupta",date:"2026-11-17",product:"Birthday cake",amount:2400,status:"Pending"},
+ {id:"OT-1009",customer:"Aman Singh",date:"2026-11-17",product:"Gift hamper",amount:1500,status:"Delivered"},
+ {id:"OT-1008",customer:"Aditi Sharma",date:"2026-11-16",product:"Celebration cake",amount:1800,status:"Processing"},
+ {id:"OT-1007",customer:"Riya Mehta",date:"2026-11-16",product:"Brownie box",amount:650,status:"Pending"},
+ {id:"OT-1006",customer:"Karan Shah",date:"2026-11-15",product:"Anniversary cake",amount:2200,status:"Delivered"},
+ {id:"OT-1005",customer:"Simran Kaur",date:"2026-11-15",product:"Cupcake box",amount:900,status:"Pending"},
+ {id:"OT-1004",customer:"Arjun Rao",date:"2026-11-14",product:"Custom cake",amount:2600,status:"Delivered"},
+ {id:"OT-1003",customer:"Meera Joshi",date:"2026-11-14",product:"Cookie box",amount:750,status:"Processing"},
+ {id:"OT-1002",customer:"Rahul Verma",date:"2026-11-13",product:"Dessert hamper",amount:1900,status:"Pending"},
+ {id:"OT-1001",customer:"Aman Singh",date:"2026-11-12",product:"Birthday cake",amount:2100,status:"Delivered"}
+];
+let orders;
+try{orders=JSON.parse(localStorage.getItem("ot_orders"))||initialOrders}catch(e){orders=initialOrders}
+function save(){localStorage.setItem("ot_orders",JSON.stringify(orders));renderAll()}
+function showPage(id,btn){
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+ document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
+ if(btn)btn.classList.add("active");
+ renderAll();
+}
+function renderOrders(){
+ const q=(document.getElementById("search")?.value||"").toLowerCase();
+ const f=document.getElementById("filter")?.value||"";
+ const rows=orders.filter(o=>(o.customer+" "+o.id).toLowerCase().includes(q)&&(!f||o.status===f));
+ document.getElementById("orderRows").innerHTML=rows.map(o=>`<tr><td><b>${o.id}</b></td><td>${safe(o.customer)}</td><td>${o.date}</td><td>₹${o.amount.toLocaleString("en-IN")}</td><td><span class="status ${o.status}">${o.status}</span></td><td><select onchange="updateStatus('${o.id}',this.value)"><option value="">Update</option>${["Pending","Processing","Delivered"].map(s=>`<option ${s===o.status?"selected":""}>${s}</option>`).join("")}</select></td></tr>`).join("")||'<tr><td colspan="6" class="empty">No matching orders found.</td></tr>';
+}
+function safe(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function renderDashboard(){
+ document.getElementById("totalOrders").textContent=orders.length;
+ document.getElementById("pendingOrders").textContent=orders.filter(o=>o.status==="Pending").length;
+ document.getElementById("recentRows").innerHTML=orders.slice(0,5).map(o=>`<tr><td><b>${o.id}</b></td><td>${safe(o.customer)}</td><td>${o.date}</td><td>₹${o.amount.toLocaleString("en-IN")}</td><td><span class="status ${o.status}">${o.status}</span></td></tr>`).join("");
+}
+function renderCustomers(){
+ const names=[...new Set(orders.map(o=>o.customer))];
+ document.getElementById("customerGrid").innerHTML=names.map(n=>{let list=orders.filter(o=>o.customer===n);return `<div class="customer"><strong>${safe(n)}</strong><div class="stat-label">${list.length} orders</div><div class="metric">₹${list.reduce((a,o)=>a+o.amount,0).toLocaleString("en-IN")}</div><div class="stat-label">Total order value</div><p class="stat-label">Last order: ${list[0].date}</p></div>`}).join("");
+}
+function renderReports(){
+ document.getElementById("reportTotal").textContent=orders.length;
+ document.getElementById("deliveredTotal").textContent=orders.filter(o=>o.status==="Delivered").length;
+ document.getElementById("statusSummary").innerHTML=["Pending","Processing","Delivered"].map(s=>`<p>${s}: <b>${orders.filter(o=>o.status===s).length}</b></p>`).join("");
+}
+function renderAll(){renderDashboard();renderOrders();renderCustomers();renderReports()}
+function updateStatus(id,status){if(!status)return;let o=orders.find(x=>x.id===id);if(o){o.status=status;save()}}
+function openModal(){document.getElementById("orderModal").classList.add("open")}
+function closeModal(){document.getElementById("orderModal").classList.remove("open")}
+function createOrder(){
+ let customer=document.getElementById("newCustomer").value.trim();
+ let product=document.getElementById("newProduct").value.trim();
+ let amount=Number(document.getElementById("newAmount").value);
+ let date=document.getElementById("newDate").value;
+ if(!customer||!product||amount<=0||!date){alert("Please complete all fields with a valid amount.");return}
+ let number=Math.max(0,...orders.map(o=>Number(o.id.split("-")[1])||0))+1;
+ orders.unshift({id:"OT-"+number,customer,product,amount,date,status:"Pending"});
+ ["newCustomer","newProduct","newAmount","newDate"].forEach(id=>document.getElementById(id).value="");
+ closeModal();save();
+}
+function addCustomer(){let n=prompt("Enter customer name");if(n?.trim()){let found=orders.some(o=>o.customer.toLowerCase()===n.trim().toLowerCase());if(!found){orders.unshift({id:"OT-"+(1000+orders.length+1),customer:n.trim(),product:"New customer",amount:0,date:new Date().toISOString().slice(0,10),status:"Pending"});save()}else alert("This customer already exists.")}}
+function exportCSV(){
+ let csv="Order ID,Customer,Product,Date,Amount,Status\n"+orders.map(o=>[o.id,'"'+o.customer.replace(/"/g,'""')+'"','"'+o.product.replace(/"/g,'""')+'"',o.date,o.amount,o.status].join(",")).join("\n");
+ let a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="ordertrack-orders.csv";a.click();URL.revokeObjectURL(a.href);
+}
+renderAll();
+</script>
+</body>
+</html>
